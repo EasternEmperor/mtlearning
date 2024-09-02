@@ -10,5 +10,5 @@
 # 2. 设计主要思想
 1. 减小加锁粒度：segment数组，每个segment内再保存一个hashEntry数组，其中才是真正的键值对![[Pasted image 20240711151828.png]]
 2. 读取不加锁，只有写时需要加锁：变量定义使用`volatile`修饰，对变量的修改能被所有线程感知，因此读可以不加锁；写的时候使用`UNSAFE.getOrderedObject`来确保访问到最新值，和`UNSAFE.putOrderedObject`来确保只有完整写完后新值才写入内存被其他线程看见
-3. 扩容：需要扩容HashEntry数组大小，使用hashMap的一样的方法，需要加锁处理
+3. 扩容：需要扩容HashEntry数组大小，使用hashMap一样的方法，需要加锁处理
 4. size()：先无锁遍历，如果两次无锁遍历期间没有put操作，则直接返回获取的size；否则，重试；重试次数超过阈值，则全局加锁获取size
